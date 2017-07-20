@@ -1,0 +1,12 @@
+--- # Gather EC2 Facts from my remote instance(s) using ec2 moule
+- hosts: aws
+  remote_user: ec2-user
+  become: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+  - name: Gather the EC2 Facts about running instance(s)
+    action: ec2_facts
+  - name: Conditional Display of instance type for t2.micro
+    debug: msg="This Instance of type t2.micro"
+    when: ansible_ec2_instance_type == 't2.micro'

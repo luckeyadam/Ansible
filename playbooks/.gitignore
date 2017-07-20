@@ -1,3 +1,7 @@
 # ssh files #
 #############
 *.pem
+
+# ansible files #
+#################
+*.retry
