@@ -1,0 +1,18 @@
+--- # EC2 - Start, Stop, Terminate Module use example
+- hosts: localhost
+  connection: local
+  remote_user: test
+  become: sudo
+  gather_facts: no
+  vars_files:
+  - files/awscreds.yml
+  tasks:
+  - name: Manage the state of an instance
+    ec2:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      #could use gather_facts to go out to aws instances and pull ids to a list instead of hardcoding instance_ids
+      instance_ids: i-04e0d86b2346477c3
+      state: running
+    
