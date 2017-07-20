@@ -1,0 +1,19 @@
+--- # EC2 module provisioning example
+- hosts: localhost
+  connection: local
+  remote_user: test
+  become: sudo
+  gather_facts: no
+  vars_files:
+  - files/awscreds.yml
+  tasks:
+  - name: Basic provisioning of two t2.micro EC2 Instances
+    ec2:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      image: ami-6df1e514
+      instance_type: t2.micro
+      count: 2
+      vpc_subnet_id: subnet-7d65b526
+      assign_public_ip: yes
