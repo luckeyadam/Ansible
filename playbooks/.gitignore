@@ -5,3 +5,4 @@
 # ansible files #
 #################
 *.retry
+awscreds.yml
