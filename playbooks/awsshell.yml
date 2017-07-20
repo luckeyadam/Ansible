@@ -1,4 +1,4 @@
---- # AWS EC2 Instance Communication Shell Command Example
+--- # AWS EC2 Instance Communication Shell Command Example To Verify EC2 Connectivity
 - hosts: aws
   remote_user: ec2-user
   become: sudo
