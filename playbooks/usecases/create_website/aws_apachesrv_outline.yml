@@ -1,0 +1,21 @@
+--- # Outline of tasks for playbook
+- hosts: localhost, awsinstance
+  become: sudo
+  connection: local, ssh
+  ssh-agent, ssh-add key
+  gather_facts: yes
+  include credentials file
+  
+- connect to running instance id
+  - install apache
+  - copy website over
+  - restart apache
+  - test port 80 and default page
+  - install all necessary update
+  
+- connect to AWS console
+  - take snapshot of web directory (/dev/sdb1)
+  - create new AMI from running instance
+  - launch new instance from new AMI
+
+
