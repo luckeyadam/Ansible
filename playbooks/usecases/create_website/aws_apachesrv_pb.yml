@@ -1,0 +1,60 @@
+--- # Ansible playbook to configure static web server and to create new AMI template
+- hosts: aws
+  connection: ssh
+  remote_user: ec2-user
+  become: yes
+  gather_facts: yes
+  tasks:
+  - name: Connect to remote host, execute yum updates
+    yum: name=* state=latest
+  - name: Install apache
+    yum: name=httpd state=latest
+  - name: Deploy static index.html
+    copy: src=./files/index.html dest=/var/www/html/index.html owner=root group=root mode=0655 backup=yes
+  - name: Restart apache
+    service: name=httpd state=restarted
+  - name: Wait for apache port 80 to listen
+    wait_for: host=ec2-34-209-28-244.us-west-2.compute.amazonaws.com port=80 delay=5
+  - name: Install wget
+    yum: name=wget state=latest
+  - name: Test site
+    shell: /usr/bin/wget http://localhost
+    register: site_result
+  - name: Display the results
+    debug: var=site_result
+
+
+- hosts: localhost
+  connection: local
+  remote_user: ansible
+  become: sudo
+  gather_facts: no
+  vars_files:
+  - ../../files/awscreds.yml
+  tasks:
+  - name: Take a snapshot
+    ec2_snapshot:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      instance_id: i-0722140de560f3a59
+      device_name: /dev/sdb
+      description: Initial playbook static site deployment backup
+      wait: no
+    register: snapshot_results
+  - name: Display snapshot results
+    debug: var=snapshot_results
+  - name: Create new AMI from instance
+    ec2_ami:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      instance_id: i-0722140de560f3a59
+      wait: no
+      name: ansiblewebservertemplate
+      tags:
+        Name: AnsibleAMITemplate
+        Service: TestAMITemplatePlaybook
+    register: ami_results
+  - name: Display AMI results
+    debug: var=ami_results
