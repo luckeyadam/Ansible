@@ -1,0 +1,33 @@
+--- # S3  module provisioning example
+- hosts: localhost
+  connection: local
+  remote_user: test
+  become: sudo
+  gather_facts: no
+  vars_files:
+  - files/awscreds.yml
+  tasks:
+  - name: Create an s3 bucket
+    s3:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      bucket: uniqueansiblebucket1
+      mode: create
+      permission: public-read-write
+    register: create_bucket
+  - name: Copy files to bucket
+    s3:
+      aws_access_key: "{{ aws_id }}"
+      aws_secret_key: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      bucket: uniqueansiblebucket1
+      object: /playbooks/aws_iam.yml
+      # replace with directory structure as applicable
+      src: <INSERT DIRECTORY STRUCTURE HERE>/playbooks/aws_iam.yml
+      mode: put
+    register: copy_files
+  - name: Output of creation
+    debug: var=create_bucket
+  - name: Output of copy
+    debug: var=copy_files
