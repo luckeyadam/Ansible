@@ -1,0 +1,24 @@
+---
+- hosts: EC2database
+  remote_user: ec2-user
+  become: yes
+  connection: ssh
+
+  tasks:
+#    - name: create data cluster
+#      command: service postgresql initdb
+
+    - service:
+        name: postgresql
+        state: started
+
+  vars_files:
+  - files/vars.yml
+
+  tasks:
+    - name: create USER
+      postgresql_user:
+        db: postgres
+        login_unix_socket: /tmp
+        name: "{{ dbuser }}"
+        password: "{{ dbpassword }}"

@@ -1,9 +1,9 @@
 --- # EC2 module remote facts
-- hosts: localhost
-  connection: local
-  remote_user: test
+- hosts: aws
+  connection: ssh
+  remote_user: ec2-user
   become: sudo
-  gather_facts: no
+  gather_facts: yes
   vars_files:
   - files/awscreds.yml
   tasks:
