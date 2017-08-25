@@ -1,4 +1,0 @@
-  vars:
-    dbname: testdb
-    dbuser: testuser
-    dbpassword: plaintextisbad
